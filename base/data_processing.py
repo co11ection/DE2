@@ -165,5 +165,6 @@ result = [num for num in numbers if num > 20]
 print(result)
 
 
-result = [[[0 for i in range(3)] for i in range(3)] for i in range(3)]
-print(result)
+result = [[[0 for k in range(4)]
+           for j in range(3)]
+           for i in range(2)]
