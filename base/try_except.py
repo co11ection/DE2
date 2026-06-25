@@ -150,7 +150,8 @@ except ZeroDivisionError:
 
 import logging
 logging.basicConfig(
-    level=logging.INFO
+    level=logging.INFO,
+    filename='app.log'
 )
 
 logging.info(
@@ -166,3 +167,7 @@ logging.error(
 )
 
 
+try: 
+    result = 10/0
+except ZeroDivisionError:
+    logging.error("Деление на ноль")
