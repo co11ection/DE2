@@ -139,8 +139,54 @@ class Store:
             product.info()
         else:
             print("Товар не найден")
+    
+    # --------- update -------------
+    def update_product(self, name):
+        product = self.find_product(name)
+        if product:
+            try:
+                price = float(input("Новая цена: "))
+                quantity = int(input("Новое количество: "))
+                
+                product.set_price(price)
+                product.set_quantity(quantity)
+
+            except ValueError as e:
+                print(f"Ошибка ввода: {e}")
             
+            else:
+                print("Товар успешно обновлен")
+        else:
+            print("Товар не найден")
             
+    
+    def delete_product(self, name):
+        product = self.find_product(name)
+        if product:
+            self.products.remove(product)
+            print("Товар удален")
+        else:
+            print("Товар не найден")
+            
+    # --------- sorting ---------
+    def sort_price(self):
+        sorted_products = sorted(
+            self.products,
+            key=lambda product: product.get_price() 
+        )
+        print("Сортировка по цене")
+        for product in sorted_products:   
+            product.info()
+    
+    def sort_name(self):
+        sorted_products = sorted(
+            self.products,
+            key = lambda product: product.get_name().lower()
+        )
+        print("Сортировка по названию")
+        for product in sorted_products:   
+            product.info()
+
             
             
             
@@ -159,7 +205,7 @@ store.create_product(
     )
 )
 bread = FoodProduct(
-    name="Белый хлеб",
+    name="белый хлеб",
     price=30,
     quantity=200,
     expiration_date="3 сутки"
@@ -168,4 +214,103 @@ store.create_product(bread)
 store.show_products()
 
 print('!!!!!!!!!!!!!!!!!!!!!!!')
-store.search()
+# store.search()
+
+# store.update_product("Ноутбук")
+# print('удаление продукта')
+# store.delete_product("ноутбук")
+print('Список продуктов')
+store.show_products()
+
+# store.sort_price()
+# store.sort_name()
+
+
+while True:
+    print(
+        """
+        ========================
+                Магазин
+        ========================
+        1. Добавить товар
+        2. Показать товары
+        3. Изменить товар
+        4. Удалить товар
+        5. Поиск товара
+        6. Сортировака товара по цене
+        7. Сортировка товара по названию
+        0. Выход
+        """
+    )
+    choice = input("Выбери пункт: ")
+    
+    if choice == '1':
+        print("1. Обычный товар")
+        print("2. Продукт питания")
+        print("3. Электроника")
+        product_type = input("Тип товара: ")
+        
+        try:
+            name = input("Название: ")
+            price = float(input("Цена: "))
+            quantity = int(input("Количество: "))
+            
+            if product_type == '1':
+                category = input("Категория: ")
+                
+                product = Product(
+                    name=name,
+                    price=price,
+                    quantity=quantity,
+                    category=category
+                )
+            elif product_type == "2":
+                expiration = input("Срок годности: ")
+                
+                product = FoodProduct(
+                    name=name,
+                    price=price,
+                    quantity=quantity,
+                    expiration_date=expiration
+                )
+            elif product_type == "3":
+                warranty = input("Гарантия: ")
+                
+                product = ElectronicProduct(
+                    name=name,
+                    price=price,
+                    quantity=quantity,
+                    warranty=warranty
+                )
+            else:
+                print("Не верный тип продукта")
+                continue
+            
+            store.create_product(product)
+        except ValueError:
+               print("Ошибка ввода")
+    
+    elif choice == '2':
+        store.show_products()
+    elif choice == "3":
+        name = input("Название товара: ")
+        store.update_product(name)
+    elif choice == '4':
+        name = input("Название товара: ")
+        store.delete_product(name)
+    
+    elif choice == '5':
+        store.search()
+    
+    elif choice == "6":
+        store.sort_price()
+    
+    elif choice == '7':
+        store.sort_name()
+    
+    elif choice == "0":
+        print("До свидания!")
+        break
+    
+    else:
+        print("Неверный пункт меню!!!")
