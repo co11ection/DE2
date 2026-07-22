@@ -54,8 +54,41 @@ def parse_listings(html):
         year_match = re.search(r'((?:19|20)\d{2})', text)
         year = int(year_match.group(1)) if year_match else None
         
-        print(title, price_usd, year)
+        
+        millage_match = re.search(r'(\d[\d\s]*)\s*km', text)
+        if millage_match:
+            millage_km = millage_match.group(1).replace("\xa0", '')
+            millage_km = int(millage_km)
+        else:
+            millage_km = None
+            
+        city_match = re.search(r'г\.\s*([А-Яа-яЁё\-]+)', text)
+        city = city_match.group(1) if city_match else None
+        
+        car_data = {
+            "title": title,
+            "price_usd": price_usd,
+            "year": year,
+            "millage_km": millage_km,
+            "city": city,
+            "url": "https://mashina.kg/" + href
+        }
+        listings.append(car_data)
+    return listings
+        
 
+def save_to_csv(listings, file_name='cars.csv'):
+    if not listings:
+        print("Нечего сохранять")
+        return None
+    with open(file_name, "w", newline="", encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=listings[0].keys())
+        writer.writeheader()
+        writer.writerows(listings)
+        
 
-html = get_html(URL)
-parse_listings(html)
+if __name__ == "__main__":
+    html = get_html(URL)
+    listings = parse_listings(html)
+    save_to_csv(listings)
+    print("Все спарсили")

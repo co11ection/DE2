@@ -34,11 +34,62 @@ session = Session()
 students = session.query(Students).all()
 for student in students:
     print({
+        "id": student.id,
         "first_name": student.first_name,
-        "last_name": student.last_name
+        "last_name": student.last_name,
+        "age": student.age
     })
 
 # Получение одного студента
 student = session.query(Students).first()
 
 print(student.first_name)
+
+
+# Добавить данные в таблицу
+# new_student = Students(
+#     first_name='Bakyt',
+#     last_name='Bakytov',
+#     age=20
+# )
+# session.add(new_student)
+# session.commit()
+
+# Фильтрация данных
+student = session.query(Students).filter(Students.id == 2).first()
+
+print(
+    {
+        "id": student.id,
+        "first_name": student.first_name,
+        "last_name": student.last_name,
+        "age": student.age
+    }
+)
+# Изменение данных в таблиц
+student = session.query(Students).filter(Students.id == 2).first()
+student.age = 27
+session.commit()
+
+
+# Удаление данных из таблицы
+# student = session.query(Students).filter(Students.id == 11).first()
+# session.delete(student)
+# session.commit()
+
+
+# Фильтрация по нескольким условиям
+students = session.query(Students).filter(
+    Students.age > 20,
+    Students.first_name == "Asan"
+).all()
+
+for student in students:
+    print(
+    {
+        "id": student.id,
+        "first_name": student.first_name,
+        "last_name": student.last_name,
+        "age": student.age
+    }
+)
